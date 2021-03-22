@@ -1,12 +1,27 @@
 class CountdownTimer {
-  constructor({ selector, targetDate, onTick }) {
+  constructor({ selector, targetDate }) {
     this.selector = selector;
     this.targetDate = targetDate;
-    this.onTick = onTick;
-    this.updateTime();
+
+    this.setTimer();
   }
 
-  updateTime() {
+  updateClockFace({ days, hours, minutes, seconds }) {
+    document.querySelector(
+      `${this.selector} [data-value="days"]`
+    ).textContent = days;
+    document.querySelector(
+      `${this.selector} [data-value="hours"]`
+    ).textContent = hours;
+    document.querySelector(
+      `${this.selector} [data-value="mins"]`
+    ).textContent = minutes;
+    document.querySelector(
+      `${this.selector} [data-value="secs"]`
+    ).textContent = seconds;
+  }
+
+  setTimer() {
     const timerID = setInterval(() => {
       const targetTime = this.targetDate.getTime();
       const currentTime = Date.now();
@@ -15,13 +30,12 @@ class CountdownTimer {
         clearInterval(timerID);
         return console.log("Get a party!!!");
       }
-      const time = {
-        days: this.getDays(deltaTime),
-        hours: this.getHours(deltaTime),
-        minutes: this.getMinutes(deltaTime),
-        seconds: this.getSeconds(deltaTime)
-      };
-      this.onTick(time);
+      const days = this.getDays(deltaTime);
+      const hours = this.getHours(deltaTime);
+      const minutes = this.getMinutes(deltaTime);
+      const seconds = this.getSeconds(deltaTime);
+
+      this.updateClockFace({ days, hours, minutes, seconds });
     }, 1000);
   }
 
